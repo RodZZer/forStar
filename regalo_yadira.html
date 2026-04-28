@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Yadira ⚡</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=IM+Fell+English+SC&display=swap');
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dark: #8b6914;
+    --parchment: #f4e4c1;
+    --parchment-dark: #d4b483;
+    --ink: #1a0f00;
+    --red: #8b0000;
+    --purple: #2d1b69;
+    --green: #0a4a0a;
+    --glow: #ffe066;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0510;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ===== STARS BACKGROUND ===== */
+  #stars-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
+  }
+
+  /* ===== FLOATING PARTICLES ===== */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    font-size: 1.2rem;
+    animation: floatUp linear infinite;
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-100vh) rotate(720deg); }
+  }
+
+  /* ===== SCREEN LAYERS ===== */
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10;
+    transition: opacity 0.8s ease;
+  }
+  .screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ===== INTRO SCREEN ===== */
+  #intro {
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hogwarts-crest {
+    font-size: 5rem;
+    animation: crестPulse 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px var(--gold));
+  }
+  @keyframes crестPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px var(--gold)); }
+    50% { transform: scale(1.08); filter: drop-shadow(0 0 40px var(--glow)); }
+  }
+
+  #intro h1 {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.2rem, 4vw, 2.2rem);
+    color: var(--gold-light);
+    text-shadow: 0 0 30px var(--gold), 0 0 60px var(--gold-dark);
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+  }
+
+  #intro p {
+    font-family: 'IM Fell English SC', serif;
+    color: var(--parchment);
+    font-size: 1rem;
+    opacity: 0.85;
+    max-width: 400px;
+  }
+
+  .btn-magic {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+    border: 2px solid var(--gold-light);
+    color: var(--ink);
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 0 20px rgba(201,168,76,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  .btn-magic::before {
+    content: '';
+    position: absolute; top: -50%; left: -60%;
+    width: 40%; height: 200%;
+    background: rgba(255,255,255,0.3);
+    transform: skewX(-20deg);
+    transition: left 0.4s;
+  }
+  .btn-magic:hover::before { left: 120%; }
+  .btn-magic:hover {
+    box-shadow: 0 0 40px rgba(201,168,76,0.8), 0 0 80px rgba(201,168,76,0.3);
+    transform: translateY(-2px);
+  }
+  .btn-magic:active { transform: translateY(0); }
+
+  /* ===== SORTING HAT SCREEN ===== */
+  #sorting {
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  #sorting h2 {
+    font-family: 'Cinzel Decorative', cursive;
+    color: var(--gold-light);
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    text-shadow: 0 0 20px var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  #sorting p {
+    font-family: 'IM Fell English SC', serif;
+    color: var(--parchment);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .hat-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  .hat-emoji {
+    font-size: 5rem;
+    display: block;
+    transition: transform 0.3s;
+    filter: drop-shadow(0 0 15px rgba(201,168,76,0.5));
+    animation: hatWobble 4s ease-in-out infinite;
+  }
+  @keyframes hatWobble {
+    0%,100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  .hat-container:hover .hat-emoji {
+    animation: none;
+    transform: scale(1.15) rotate(-10deg);
+    filter: drop-shadow(0 0 30px var(--gold));
+  }
+
+  .sorting-hint {
+    font-family: 'IM Fell English SC', serif;
+    color: var(--gold);
+    font-size: 0.85rem;
+    opacity: 0.7;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+
+  /* ===== HOUSE REVEAL ===== */
+  #house-reveal {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+  }
+
+  .house-banner {
+    border: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 2rem;
+    position: relative;
+    background: rgba(0,0,0,0.6);
+    box-shadow: 0 0 40px rgba(201,168,76,0.2), inset 0 0 40px rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+  }
+  .house-banner::before, .house-banner::after {
+    content: '✦';
+    position: absolute;
+    color: var(--gold);
+    font-size: 1.5rem;
+  }
+  .house-banner::before { top: 0.5rem; left: 0.8rem; }
+  .house-banner::after { bottom: 0.5rem; right: 0.8rem; }
+
+  #house-emoji { font-size: 4rem; animation: houseGlow 2s ease-in-out infinite; }
+  @keyframes houseGlow {
+    0%,100% { filter: drop-shadow(0 0 10px gold); }
+    50% { filter: drop-shadow(0 0 30px gold) drop-shadow(0 0 60px gold); }
+  }
+
+  #house-name {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    margin: 0.5rem 0;
+    text-shadow: 0 0 30px currentColor;
+  }
+
+  #house-traits {
+    font-family: 'IM Fell English SC', serif;
+    color: var(--parchment);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ===== LETTER SCREEN ===== */
+  #letter-screen {
+    perspective: 1200px;
+    z-index: 20;
+    padding: 1rem;
+  }
+
+  .envelope-wrapper {
+    position: relative;
+    width: min(480px, 90vw);
+    cursor: pointer;
+  }
+
+  .envelope {
+    width: 100%;
+    background: linear-gradient(160deg, #e8d5a3, #c9a84c, #e8d5a3);
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(201,168,76,0.3);
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+  }
+  .envelope:hover { transform: translateY(-5px) rotateX(3deg); }
+
+  .envelope-body {
+    padding: 2.5rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .envelope-seal {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 0 20px rgba(139,0,0,0.8));
+    animation: sealPulse 3s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes sealPulse {
+    0%,100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(139,0,0,0.8)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(255,0,0,0.5)); }
+  }
+
+  .envelope-to {
+    font-family: 'IM Fell English SC', serif;
+    text-align: center;
+    color: var(--ink);
+    line-height: 1.8;
+  }
+  .envelope-to .label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .envelope-to .name {
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    font-weight: 600;
+    color: #3d1a00;
+  }
+  .envelope-to .address {
+    font-size: 0.8rem;
+    opacity: 0.75;
+  }
+
+  .envelope-hint {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: var(--ink);
+    opacity: 0.5;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ===== OPEN LETTER ===== */
+  #open-letter {
+    padding: 1rem;
+    max-height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dark) transparent;
+  }
+
+  .letter-paper {
+    width: min(520px, 92vw);
+    background: linear-gradient(180deg, #f5e6c8 0%, #f0ddb0 50%, #ead4a0 100%);
+    border-radius: 4px;
+    padding: 3rem 2.5rem;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(201,168,76,0.2);
+    animation: letterReveal 0.8s ease-out;
+  }
+  @keyframes letterReveal {
+    from { opacity: 0; transform: scale(0.8) rotateX(-20deg); }
+    to { opacity: 1; transform: scale(1) rotateX(0deg); }
+  }
+
+  .letter-paper::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      transparent, transparent 27px,
+      rgba(139,105,20,0.12) 28px
+    );
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  .letter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--gold-dark);
+  }
+
+  .letter-crest-small { font-size: 2.5rem; }
+
+  .letter-from {
+    text-align: right;
+    font-family: 'IM Fell English SC', serif;
+    color: var(--ink);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    opacity: 0.8;
+  }
+
+  .letter-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    color: var(--red);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+    letter-spacing: 0.08em;
+  }
+
+  .letter-body {
+    font-family: 'IM Fell English SC', serif;
+    color: #2a1500;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    line-height: 2.1;
+  }
+
+  .letter-body p { margin-bottom: 1rem; text-indent: 1.5rem; }
+  .letter-body p:first-child { text-indent: 0; }
+
+  .letter-highlight {
+    font-family: 'Cinzel Decorative', cursive;
+    color: var(--red);
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+
+  .letter-signature {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gold-dark);
+    text-align: right;
+    font-family: 'IM Fell English SC', serif;
+    color: var(--ink);
+  }
+
+  .letter-signature .sig-line {
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--red);
+    margin-bottom: 0.3rem;
+  }
+
+  .letter-signature .sig-title {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    letter-spacing: 0.1em;
+  }
+
+  .wax-seal-bottom {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 2.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  }
+
+  /* ===== SPELL BUTTONS ===== */
+  .spells-section {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .spells-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 0.8rem;
+    color: var(--gold-dark);
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+
+  .spells-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+  }
+
+  .spell-btn {
+    background: rgba(139,0,0,0.1);
+    border: 1px solid var(--red);
+    color: var(--red);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    border-radius: 3px;
+    letter-spacing: 0.1em;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .spell-btn:hover {
+    background: var(--red);
+    color: var(--parchment);
+    box-shadow: 0 0 15px rgba(139,0,0,0.5);
+    transform: translateY(-2px);
+  }
+
+  /* ===== SPELL EFFECT OVERLAY ===== */
+  #spell-overlay {
+    position: fixed; inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  #spell-overlay.active { opacity: 1; pointer-events: all; }
+
+  .spell-effect-text {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(2rem, 8vw, 4rem);
+    text-align: center;
+    padding: 2rem;
+    animation: spellCast 3s ease-out forwards;
+  }
+  @keyframes spellCast {
+    0%   { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+    20%  { opacity: 1; transform: scale(1.2) rotate(3deg); }
+    40%  { transform: scale(1) rotate(0deg); }
+    70%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.5) translateY(-30px); }
+  }
+
+  /* ===== MAGIC WAND CURSOR ===== */
+  * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ctext y='20' font-size='20'%3E🪄%3C/text%3E%3C/svg%3E") 0 24, auto; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 480px) {
+    .letter-paper { padding: 2rem 1.5rem; }
+    .letter-header { flex-direction: column; gap: 0.5rem; align-items: center; }
+    .letter-from { text-align: center; }
+  }
+
+  /* ===== TRANSITION FLASH ===== */
+  #flash {
+    position: fixed; inset: 0;
+    background: white;
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0;
+  }
+  #flash.active { animation: flashEffect 0.5s ease-out; }
+  @keyframes flashEffect {
+    0% { opacity: 0.8; }
+    100% { opacity: 0; }
+  }
+
+  /* ===== PROGRESS DOTS ===== */
+  .progress-dots {
+    display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(201,168,76,0.3);
+    border: 1px solid var(--gold-dark);
+    transition: all 0.3s;
+  }
+  .dot.active { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+<div id="flash"></div>
+
+<!-- SPELL OVERLAY -->
+<div id="spell-overlay">
+  <div class="spell-effect-text" id="spell-text"></div>
+</div>
+
+<!-- ===== SCREEN 1: INTRO ===== -->
+<div class="screen" id="intro">
+  <div class="hogwarts-crest">⚡</div>
+  <h1>Escuela de Hogwarts<br>Magia y Hechicería</h1>
+  <p>Un obsequio mágico ha llegado por correo búho especialmente para ti...</p>
+  <div class="progress-dots">
+    <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+  <button class="btn-magic" onclick="goTo('sorting')">✨ Comenzar la Magia ✨</button>
+</div>
+
+<!-- ===== SCREEN 2: SORTING HAT ===== -->
+<div class="screen hidden" id="sorting">
+  <div style="text-align:center; max-width:500px; width:100%; padding:1rem;">
+    <h2>El Sombrero Seleccionador</h2>
+    <p>Antes de recibir tu carta, el Sombrero Seleccionador debe conocerte.<br>¿A cuál Casa de Hogwarts pertenece <em>Yadira Estrella</em>?</p>
+    <div class="hat-container" onclick="sortingHat()">
+      <span class="hat-emoji">🎩</span>
+    </div>
+    <p class="sorting-hint">— Toca el sombrero para conocer tu destino —</p>
+    <div class="progress-dots">
+      <div class="dot active"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: HOUSE REVEAL ===== -->
+<div class="screen hidden" id="house-reveal">
+  <div style="text-align:center; max-width:500px; width:100%; padding:1rem;">
+    <div class="house-banner">
+      <div id="house-emoji">🦁</div>
+      <div id="house-name" style="color: #c0392b;">Gryffindor</div>
+      <div id="house-traits">Valentía · Determinación · Corazón Noble<br>"Donde habita la valentía más audaz"</div>
+    </div>
+    <p style="font-family:'IM Fell English SC',serif; color:var(--parchment); margin-top:1.5rem; font-size:0.95rem; line-height:1.7;">
+      El sombrero ha hablado. Ahora ve a recibir<br>tu carta de admisión especial...
+    </p>
+    <div class="progress-dots" style="margin-bottom:1rem;">
+      <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div>
+    </div>
+    <button class="btn-magic" onclick="goTo('letter-screen')">Recibir mi Carta 📜</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 4: ENVELOPE ===== -->
+<div class="screen hidden" id="letter-screen">
+  <div class="envelope-wrapper" onclick="openLetter()">
+    <div class="envelope">
+      <div class="envelope-body">
+        <div class="envelope-seal">🦅</div>
+        <div class="envelope-to">
+          <div class="label">Entregado a:</div>
+          <div class="name">Yadira Estrella Medina Calderón</div>
+          <div class="address">El lugar más especial de su corazón<br>Ciudad de los Sueños Mágicos, Chile</div>
+        </div>
+        <div class="envelope-hint">— Romper el sello para leer —</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-dots" style="margin-top:1.5rem;">
+    <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 5: OPEN LETTER ===== -->
+<div class="screen hidden" id="open-letter">
+  <div class="letter-paper">
+    <div class="letter-header">
+      <div class="letter-crest-small">⚡🏰⚡</div>
+      <div class="letter-from">
+        Hogwarts School of<br>Witchcraft & Wizardry<br>
+        <em>Highlands, Escocia</em><br>
+        22 de Abril, 2026
+      </div>
+    </div>
+
+    <div class="letter-title">✦ Carta de Admisión Especial ✦</div>
+
+    <div class="letter-body">
+      <p>Estimada <span class="letter-highlight">Yadira Estrella Medina Calderón</span>,</p>
+
+      <p>Nos complace enormemente comunicarte que has sido seleccionada para unirte a la más grande institución de magia del mundo conocido: <strong>Hogwarts School of Witchcraft & Wizardry</strong>.</p>
+
+      <p>Nuestro Sombrero Seleccionador ha detectado en ti una magia especial — la clase que no se enseña en ningún libro de hechizos — esa que brilla en tus ojos, en tu risa, y en cada pequeña cosa que haces.</p>
+
+      <p>Como tu nombre mismo lo proclama, llevas una <span class="letter-highlight">estrella</span> dentro de ti. Y las estrellas, querida estudiante, son la luz más antigua y poderosa que existe. Ningún encantamiento puede replicarlas.</p>
+
+      <p>A lo largo de tu camino en Hogwarts descubrirás que la mayor magia no está en la varita, sino en la persona que la sostiene. Y tú, Yadira, sostienes algo mucho más poderoso.</p>
+
+      <p>Que este mensaje llegue a ti como llegan los mejores hechizos: directamente al corazón.</p>
+    </div>
+
+    <div class="letter-signature">
+      <div class="sig-line">Albus Percival Wulfric Brian Dumbledore</div>
+      <div class="sig-title">Rector de Hogwarts · Orden de Merlín, Primera Clase</div>
+    </div>
+
+    <div class="wax-seal-bottom">🦅</div>
+
+    <div class="spells-section">
+      <div class="spells-title">✦ Pronuncia un hechizo ✦</div>
+      <div class="spells-grid">
+        <button class="spell-btn" onclick="castSpell('lumos')">Lumos ✨</button>
+        <button class="spell-btn" onclick="castSpell('expecto')">Expecto Patronum 🦌</button>
+        <button class="spell-btn" onclick="castSpell('wingardium')">Wingardium Leviosa 🪄</button>
+        <button class="spell-btn" onclick="castSpell('alohomora')">Alohomora 🔓</button>
+        <button class="spell-btn" onclick="castSpell('accio')">Accio Corazón 💛</button>
+        <button class="spell-btn" onclick="castSpell('riddikulus')">Riddikulus 🎉</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== STARS =====
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function initStars() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  stars = Array.from({length: 200}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.3,
+    speed: Math.random() * 0.3 + 0.1,
+    opacity: Math.random(),
+    dir: Math.random() > 0.5 ? 1 : -1
+  }));
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    s.opacity += s.dir * s.speed * 0.02;
+    if (s.opacity >= 1 || s.opacity <= 0) s.dir *= -1;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,240,180,${s.opacity})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+initStars();
+drawStars();
+window.addEventListener('resize', initStars);
+
+// ===== PARTICLES =====
+const EMOJIS = ['⚡','✨','🌟','💫','🪄','⭐','🔮','🦋','🌙','❤️','🌸'];
+function spawnParticle() {
+  const el = document.createElement('div');
+  el.className = 'particle';
+  el.textContent = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+  el.style.left = Math.random() * 100 + 'vw';
+  el.style.bottom = '-2rem';
+  el.style.animationDuration = (Math.random() * 6 + 6) + 's';
+  el.style.animationDelay = (Math.random() * 2) + 's';
+  el.style.fontSize = (Math.random() * 1 + 0.8) + 'rem';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 14000);
+}
+setInterval(spawnParticle, 600);
+
+// ===== NAVIGATION =====
+function flash(cb) {
+  const f = document.getElementById('flash');
+  f.classList.add('active');
+  setTimeout(() => { f.classList.remove('active'); if(cb) cb(); }, 300);
+}
+
+function goTo(id) {
+  flash(() => {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  });
+}
+
+// ===== SORTING HAT =====
+const HOUSES = [
+  { emoji:'🦁', name:'Gryffindor', color:'#c0392b', traits:'Valentía · Determinación · Corazón Noble\n"Donde habita la valentía más audaz"' },
+  { emoji:'🦅', name:'Ravenclaw',  color:'#2471a3', traits:'Sabiduría · Ingenio · Curiosidad Infinita\n"Donde la mente se convierte en hogar"' },
+  { emoji:'🦡', name:'Hufflepuff', color:'#d4ac0d', traits:'Lealtad · Paciencia · Bondad Inquebrantable\n"Donde son bien recibidos todos los demás"' },
+  { emoji:'🐍', name:'Slytherin',  color:'#1a7a4a', traits:'Ambición · Astucia · Liderazgo Natural\n"Donde se forjan los grandes destinos"' },
+];
+
+let sorted = false;
+function sortingHat() {
+  if (sorted) return;
+  sorted = true;
+  const hat = document.querySelector('.hat-emoji');
+  hat.style.animation = 'none';
+  hat.style.transition = 'all 0.2s';
+
+  let count = 0;
+  const interval = setInterval(() => {
+    hat.style.transform = count%2===0 ? 'rotate(15deg) scale(1.1)' : 'rotate(-15deg) scale(1.1)';
+    count++;
+    if (count > 10) {
+      clearInterval(interval);
+      hat.style.transform = 'scale(1.2)';
+      hat.style.filter = 'drop-shadow(0 0 40px gold)';
+      setTimeout(() => {
+        const house = HOUSES[Math.floor(Math.random() * HOUSES.length)];
+        document.getElementById('house-emoji').textContent = house.emoji;
+        document.getElementById('house-name').textContent = house.name;
+        document.getElementById('house-name').style.color = house.color;
+        document.getElementById('house-traits').textContent = house.traits.replace('\\n','\n');
+        goTo('house-reveal');
+      }, 600);
+    }
+  }, 120);
+}
+
+// ===== OPEN LETTER =====
+function openLetter() {
+  // Explosion of sparks
+  for(let i=0;i<15;i++) {
+    setTimeout(() => spawnParticle(), i*80);
+  }
+  goTo('open-letter');
+}
+
+// ===== SPELLS =====
+const SPELLS = {
+  lumos: { text:'✨ LUMOS ✨\nQue la luz ilumine tu camino', color:'#fff9c4', bg:'rgba(255,249,100,0.15)' },
+  expecto: { text:'🦌 EXPECTO PATRONUM 🦌\nTus recuerdos felices son tu fuerza', color:'#a8d8ea', bg:'rgba(100,200,255,0.15)' },
+  wingardium: { text:'🪄 WINGARDIUM LEVIOSA 🪄\nQue tu corazón vuele muy alto', color:'#c8e6c9', bg:'rgba(100,200,100,0.15)' },
+  alohomora: { text:'🔓 ALOHOMORA 🔓\nAbres puertas donde otros ven muros', color:'#ffcc80', bg:'rgba(255,180,50,0.15)' },
+  accio: { text:'💛 ACCIO CORAZÓN 💛\n¡Aquí estoy, llamándote!', color:'#f48fb1', bg:'rgba(255,100,150,0.15)' },
+  riddikulus: { text:'🎉 RIDDIKULUS 🎉\n¡Ríe fuerte, que la risa es magia!', color:'#ce93d8', bg:'rgba(200,100,220,0.15)' },
+};
+
+function castSpell(id) {
+  const spell = SPELLS[id];
+  const overlay = document.getElementById('spell-overlay');
+  const text = document.getElementById('spell-text');
+  text.textContent = spell.text;
+  text.style.color = spell.color;
+  text.style.textShadow = `0 0 40px ${spell.color}, 0 0 80px ${spell.color}`;
+  overlay.style.background = spell.bg;
+  overlay.classList.add('active');
+  for(let i=0;i<20;i++) setTimeout(() => spawnParticle(), i*100);
+  setTimeout(() => overlay.classList.remove('active'), 3000);
+}
+
+// Dismiss spell overlay on click
+document.getElementById('spell-overlay').addEventListener('click', function() {
+  this.classList.remove('active');
+});
+</script>
+</body>
+</html>
